@@ -2,12 +2,13 @@
 -#  %th{:id => "rating_header"}= link_to "Ratings"
 %h2 All Movies
 
-= form_tag movies_path, :method => :get do
+= form_tag movies_path, :method => :get, :id=> "ratings_form" do
+
   Include:
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]"
-  = submit_tag 'Refresh'
+    = check_box_tag "ratings[#{rating}]", "", @select_ratings.include?(rating), id: "ratings_#{rating}"
+  = submit_tag 'Refresh', :id=>"ratings_submit"
 
 %table#movies.table.table-striped.col-md-12
   %thead
@@ -15,6 +16,7 @@
       %th{:class => ('hilite' if @hilite == 'title'), :id => "title_header"}= link_to "Movie Title", movies_path(:sort_by => 'title')
       %th{:class => ('hilite' if @hilite == 'rating'), :id => "rating_header"}= link_to "Ratings", movies_path(:sort_by => 'rating')
       %th{:class => ('hilite' if @hilite == 'release_date'), :id => "relese_date_header"}= link_to "Release Date", movies_path(:sort_by => 'release_date')
+      %th More Info
   %tbody
     - @movies.each do |movie|
       %tr
