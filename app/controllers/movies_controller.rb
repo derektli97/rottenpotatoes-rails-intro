@@ -18,6 +18,8 @@ class MoviesController < ApplicationController
       @hilite = "title"
     elsif params[:sort] == "release_date"
       @hilite = "release_date"
+    elsif params[:sort] == "ratings"
+      @hilite = "ratings"
     end
 
 
