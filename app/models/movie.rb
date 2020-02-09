@@ -1,8 +1,8 @@
 class Movie < ActiveRecord::Base
 
     def self.get_ratings
-        @ratings = ['G','PG','PG-13','R']
-        return @ratings
+        @rating = ['G','PG','PG-13','R']
+        return @rating
     end
 
 end

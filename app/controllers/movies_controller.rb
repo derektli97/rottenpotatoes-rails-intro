@@ -10,31 +10,46 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  ## ------------------------------ working on ------------------------------
   def index
 
-    #hilite title, rating, and release date
-    if params[:sort] == "title"
+    #set rating
+    @all_ratings = Movie.get_ratings
+
+    if params[:sort_by] != nil
+      @select_ratings = session[:sort] = params[:sort_by]
+    end
+
+    if params[:ratings] != nil
+      session[:ratings] = params[:ratings]
+      @select_ratings = params[:ratings].keys
+    else
+      @select_ratings= @all_ratings
+    end
+
+    #hilite headers
+    if session[:sort] == "title"
       @hilite = "title"
-    elsif params[:sort] == "release_date"
+    elsif session[:sort] == "release_date"
       @hilite = "release_date"
-    elsif params[:sort] == "rating"
+    elsif session[:sort] == "rating"
       @hilite = "rating"
     end
 
-    #sorting our movies
-    @hilite = params[:sort_by]
-    sort = @hilite
-    @movies = Movie.all.order(params[:sort_by])
-
-    #ratings 
-    @all_ratings = Movie.get_ratings
-
-    #selected rating
-    @select_ratings = (params[:ratings].keys if params.key?(:ratings)) || @all_ratings
-    @movies = Movie.all.order(sort).where(rating: @select_ratings)
-
+    @movies = Movie.where(rating:@select_ratings).order(session[:sort])
+   
+    if ( session[:sort] != nil  && params[:sort_by] == nil)
+      if (params[:ratings] == nil && session[:ratings] != nil)
+        redirect_to movies_path(sort_by: session[:sort], ratings:session[:ratings])
+        flash.keep
+      end
+    end
+  
 
   end
+
+  ## =========================== working end ====================================
+
 
   def new
     # default: render 'new' template
